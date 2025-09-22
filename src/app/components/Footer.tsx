@@ -13,7 +13,7 @@ const Footer = () => {
         </p>
 
         <p className="text-xs text-pink-600">
-          Coded with 🤍 by her boyfriend – powered by Next.js & Tailwind CSS.
+          Powered by Next.js & Tailwind CSS.
         </p>
       </div>
     </footer>
