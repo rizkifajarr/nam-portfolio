@@ -11,7 +11,7 @@ import OrganizationExperience from "./components/OrganizationExperience";
 import Skills from "./components/Skills";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import LoveBackground from "./components/LoveBackground";
+// import LoveBackground from "./components/LoveBackground";
 
 export default function Home() {
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function Home() {
 
   return (
     <>
-      <LoveBackground />
+      {/* <LoveBackground /> */}
       <Navbar />
       <Hero />
       <About />

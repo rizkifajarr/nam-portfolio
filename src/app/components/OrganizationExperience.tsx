@@ -1,8 +1,29 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const organizations = [
+  {
+    title: "Secretariat – Karate Championship Series 2",
+    organization: "Forki Kota Pontianak",
+    date: "August 2025",
+    tasks: [
+      "Drafted official invitation letters, announcements, and other administrative documents.",
+      "Prepared administrative resources, including attendance sheets and registration forms.",
+      "Produced and distributed participant certificates.",
+    ],
+    photos: [
+      "/images/aug_2025/IMG_6416.JPEG",
+      "/images/aug_2025/IMG_6417.JPEG",
+      "/images/aug_2025/IMG_5913.PNG",
+    ],
+  },
   {
     title: "Secretariat – Karate Championship Series 1",
     organization: "Forki Kota Pontianak",
@@ -11,6 +32,12 @@ const organizations = [
       "Prepared official invitation letters, notifications, and administrative documents.",
       "Organized administrative materials such as attendance lists and forms.",
       "Issued participant certificates.",
+    ],
+    photos: [
+      "/images/may_2025/IMG_4391.JPEG",
+      "/images/may_2025/IMG_4393.JPEG",
+      "/images/may_2025/IMG_6418.JPEG",
+      "/images/may_2025/IMG_6419.JPEG",
     ],
   },
   {
@@ -30,6 +57,10 @@ const organizations = [
       "Drafted invitations and other administrative documents.",
       "Prepared attendance lists and issued participant certificates.",
     ],
+    photos: [
+      "/images/oct_2024/IMG_6751.JPG",
+      "/images/oct_2024/WhatsApp Image 2025-09-22 at 21.10.09.jpeg",
+    ],
   },
   {
     title: "Vice Secretary – Forki City Conference",
@@ -39,6 +70,7 @@ const organizations = [
       "Assisted the Head Secretary in managing documents and official correspondence.",
       "Recorded meeting minutes and distributed communications effectively.",
     ],
+    photos: ["/images/may_2024/IMG_0482.JPG", "/images/may_2024/IMG_0546.JPEG"],
   },
   {
     title: "Field Work Practice (KKL)",
@@ -46,6 +78,13 @@ const organizations = [
     date: "July – Sept 2022",
     tasks: [
       "Served as Editor & Documentation Division during a 40-day university program.",
+    ],
+    photos: [
+      "/images/kkl_2022/IMG_1226.JPG",
+      "/images/kkl_2022/IMG_1420.JPG",
+      "/images/kkl_2022/IMG_1565.JPG",
+      "/images/kkl_2022/WhatsApp Image 2022-11-28 at 20.35.25 (3).jpeg",
+      "/images/kkl_2022/WhatsApp Image 2022-11-28 at 20.39.27 (5).jpeg",
     ],
   },
   {
@@ -55,6 +94,14 @@ const organizations = [
     tasks: [
       "Performed back-office tasks and data entry for customer profiles.",
       "Handled account opening authorization procedures.",
+    ],
+    photos: [
+      "/images/intern_2022/WhatsApp Image 2022-11-28 at 20.15.40 (3).jpeg",
+      "/images/intern_2022/WhatsApp Image 2022-11-28 at 20.14.16 (4).jpeg",
+      "/images/intern_2022/WhatsApp Image 2022-11-28 at 20.14.16 (3).jpeg",
+      "/images/intern_2022/WhatsApp Image 2022-11-28 at 20.13.26 (3).jpeg",
+      "/images/intern_2022/WhatsApp Image 2022-11-28 at 20.14.10 (1).jpeg",
+      "/images/intern_2022/WhatsApp Image 2022-11-28 at 20.14.16 (1).jpeg",
     ],
   },
   {
@@ -74,6 +121,48 @@ const organizations = [
 ];
 
 const OrganizationExperience = () => {
+  const [preview, setPreview] = useState<string[] | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  const handleOpenPreview = (photos: string[], index: number) => {
+    setPreview(photos);
+    setCurrentIndex(index);
+  };
+
+  const handleClosePreview = () => {
+    setPreview(null);
+    setCurrentIndex(0);
+  };
+
+  const handleNext = useCallback(() => {
+    if (preview) {
+      setCurrentIndex((prev) => (prev + 1) % preview.length);
+    }
+  }, [preview]);
+
+  const handlePrev = useCallback(() => {
+    if (preview) {
+      setCurrentIndex((prev) => (prev - 1 + preview.length) % preview.length);
+    }
+  }, [preview]);
+
+  useEffect(() => {
+    if (!preview) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        handleNext();
+      } else if (e.key === "ArrowLeft") {
+        handlePrev();
+      } else if (e.key === "Escape") {
+        handleClosePreview();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [preview, handleNext, handlePrev]);
+
   return (
     <section
       id="organization"
@@ -111,9 +200,79 @@ const OrganizationExperience = () => {
                 <li key={i}>{task}</li>
               ))}
             </ul>
+
+            {org.photos && org.photos.length > 0 && (
+              <div className="mt-4">
+                <Swiper
+                  modules={[Navigation, Pagination]}
+                  spaceBetween={10}
+                  slidesPerView={1}
+                  navigation
+                  pagination={{ clickable: true }}
+                  className="rounded-lg shadow-md"
+                >
+                  {org.photos.map((photo, i) => (
+                    <SwiperSlide key={i}>
+                      <div
+                        className="relative w-full h-64 rounded-lg overflow-hidden cursor-pointer"
+                        onClick={() => handleOpenPreview(org.photos!, i)}
+                      >
+                        <Image
+                          src={photo}
+                          alt={`${org.title} photo ${i + 1}`}
+                          fill
+                          className="object-contain"
+                          priority={i === 0}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            )}
           </div>
         ))}
       </div>
+
+      {/* Modal Preview */}
+      {preview && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
+          <div className="relative">
+            {/* Tombol close */}
+            <button
+              onClick={handleClosePreview}
+              className="absolute -top-8 -right-8 text-white text-3xl"
+            >
+              ✕
+            </button>
+
+            {/* Foto utama */}
+            <div className="relative max-w-3xl max-h-[80vh]">
+              <Image
+                src={preview[currentIndex]}
+                alt="Preview"
+                width={1200} // kasih width supaya Image gak fill seluruh layar
+                height={800}
+                className="object-contain rounded-lg"
+              />
+            </div>
+
+            {/* Tombol navigasi */}
+            <button
+              onClick={handlePrev}
+              className="absolute left-[-3rem] top-1/2 -translate-y-1/2 text-white text-4xl"
+            >
+              ‹
+            </button>
+            <button
+              onClick={handleNext}
+              className="absolute right-[-3rem] top-1/2 -translate-y-1/2 text-white text-4xl"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
