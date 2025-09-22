@@ -7,7 +7,7 @@ const experiences = [
     role: "Office Administrator",
     company: "CV. Borneo Flora Nusantara",
     location: "Pontianak, Indonesia",
-    period: "August 2023 – Present",
+    period: "August 2023 – August 2025",
     descriptions: [
       "Collected and verified daily employee attendance data including clock-in/out, overtime, and leave.",
       "Prepared routine reports (monthly, financial summaries, and operational updates) by compiling and analyzing data.",

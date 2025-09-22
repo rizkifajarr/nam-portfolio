@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination, Keyboard } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -127,7 +127,6 @@ const OrganizationExperience = () => {
   const handleOpenPreview = (photos: string[], index: number) => {
     setPreview(photos);
     setInitialSlide(index);
-    // Tidak mengunci scroll body
   };
 
   const handleClosePreview = () => {
@@ -207,7 +206,6 @@ const OrganizationExperience = () => {
                           alt={`${org.title} photo ${i + 1}`}
                           fill
                           className="object-contain"
-                          priority={i === 0}
                         />
                       </div>
                     </SwiperSlide>
@@ -219,16 +217,14 @@ const OrganizationExperience = () => {
         ))}
       </div>
 
-      {/* Preview */}
       {preview && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 sm:p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 sm:p-4 pointer-events-auto"
           data-aos="fade-zoom-in"
           data-aos-duration="500"
           data-aos-easing="ease-out-cubic"
         >
-          <div className="relative w-full max-w-[90vw] sm:max-w-4xl lg:max-w-5xl">
-            {/* Tombol close */}
+          <div className="relative w-full max-w-[90vw] sm:max-w-4xl lg:max-w-5xl overflow-visible">
             <button
               onClick={handleClosePreview}
               className="absolute -top-10 right-0 text-white text-2xl sm:text-3xl bg-black/50 rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-black/70 transition-colors"
@@ -236,13 +232,13 @@ const OrganizationExperience = () => {
               ✕
             </button>
 
-            {/* Swiper untuk preview */}
             <Swiper
-              modules={[Navigation, Pagination]}
+              modules={[Navigation, Pagination, Keyboard]}
               spaceBetween={10}
               slidesPerView={1}
               navigation
               pagination={{ clickable: true }}
+              keyboard={{ enabled: true, onlyInViewport: false }}
               initialSlide={initialSlide}
               className="w-full rounded-lg shadow-xl"
             >
@@ -254,7 +250,6 @@ const OrganizationExperience = () => {
                       alt={`Preview photo ${i + 1}`}
                       fill
                       className="object-contain"
-                      priority
                     />
                   </div>
                 </SwiperSlide>
