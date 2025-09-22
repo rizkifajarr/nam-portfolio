@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/* 🌸 Color Variables */
+:root {
+  --color-soft-pink: #f9c5d1;
+  --color-lilac: #cdb4db;
+  --color-white: #ffffff;
+  --color-dark-purple: #5e548e;
+
+  --background: var(--color-white);
+  --foreground: var(--color-dark-purple);
+}
+
+/* 🌙 Dark Mode Fallback (optional) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1a1a1a;
+    --foreground: #f5f5f5;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* 🎨 Theme Defaults */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: "Arial", Helvetica, sans-serif;
+  scroll-behavior: smooth;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ✨ Utility Custom Classes */
+.text-soft-pink {
+  color: var(--color-soft-pink);
+}
+
+.bg-soft-pink {
+  background-color: var(--color-soft-pink);
+}
+
+.text-lilac {
+  color: var(--color-lilac);
+}
+
+.bg-lilac {
+  background-color: var(--color-lilac);
+}
+
+.text-dark-purple {
+  color: var(--color-dark-purple);
+}
+
+.bg-dark-purple {
+  background-color: var(--color-dark-purple);
+}
+
+.text-white {
+  color: var(--color-white);
+}
+
+.bg-white {
+  background-color: var(--color-white);
+}
+
+/* 🌈 Custom Hover Effects */
+.hover-glow {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 12px #cdb4db80, 0 0 24px #f9c5d150;
+  transform: translateY(-4px) scale(1.03);
+}
+
+/* 🧁 Button Basic Transition */
+button,
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+/* 💖 Feminine Animated Grid Background */
+.bg-girly-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 105, 180, 0.07) 2.5px,
+      transparent 2.5px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(255, 105, 180, 0.07) 2.5px,
+      transparent 2.5px
+    );
+  background-size: 40px 40px;
+  background-position: 0 0;
+  background-repeat: repeat;
+}
+
+@keyframes girlyGridMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
+}
+
+.bg-girly-grid-animated {
+  animation: girlyGridMove 15s linear infinite;
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 12px #f472b680, 0 0 24px #f472b650;
+  transform: translateY(-2px) scale(1.05);
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10%) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.love-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.love {
+  position: absolute;
+  font-size: 20px;
+  color: #f472b6; /* soft pink */
+  animation: fall linear infinite;
+  opacity: 0;
+}
