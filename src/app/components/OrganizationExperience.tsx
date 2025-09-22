@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
@@ -122,46 +122,31 @@ const organizations = [
 
 const OrganizationExperience = () => {
   const [preview, setPreview] = useState<string[] | null>(null);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [initialSlide, setInitialSlide] = useState<number>(0);
 
   const handleOpenPreview = (photos: string[], index: number) => {
     setPreview(photos);
-    setCurrentIndex(index);
+    setInitialSlide(index);
+    // Tidak mengunci scroll body
   };
 
   const handleClosePreview = () => {
     setPreview(null);
-    setCurrentIndex(0);
+    setInitialSlide(0);
   };
 
-  const handleNext = useCallback(() => {
-    if (preview) {
-      setCurrentIndex((prev) => (prev + 1) % preview.length);
-    }
-  }, [preview]);
-
-  const handlePrev = useCallback(() => {
-    if (preview) {
-      setCurrentIndex((prev) => (prev - 1 + preview.length) % preview.length);
-    }
-  }, [preview]);
-
   useEffect(() => {
-    if (!preview) return;
-
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") {
-        handleNext();
-      } else if (e.key === "ArrowLeft") {
-        handlePrev();
-      } else if (e.key === "Escape") {
+      if (e.key === "Escape") {
         handleClosePreview();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [preview, handleNext, handlePrev]);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <section
@@ -234,42 +219,47 @@ const OrganizationExperience = () => {
         ))}
       </div>
 
-      {/* Modal Preview */}
+      {/* Preview */}
       {preview && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
-          <div className="relative">
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 sm:p-4"
+          data-aos="fade-zoom-in"
+          data-aos-duration="500"
+          data-aos-easing="ease-out-cubic"
+        >
+          <div className="relative w-full max-w-[90vw] sm:max-w-4xl lg:max-w-5xl">
             {/* Tombol close */}
             <button
               onClick={handleClosePreview}
-              className="absolute -top-8 -right-8 text-white text-3xl"
+              className="absolute -top-10 right-0 text-white text-2xl sm:text-3xl bg-black/50 rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-black/70 transition-colors"
             >
               ✕
             </button>
 
-            {/* Foto utama */}
-            <div className="relative max-w-3xl max-h-[80vh]">
-              <Image
-                src={preview[currentIndex]}
-                alt="Preview"
-                width={1200} // kasih width supaya Image gak fill seluruh layar
-                height={800}
-                className="object-contain rounded-lg"
-              />
-            </div>
-
-            {/* Tombol navigasi */}
-            <button
-              onClick={handlePrev}
-              className="absolute left-[-3rem] top-1/2 -translate-y-1/2 text-white text-4xl"
+            {/* Swiper untuk preview */}
+            <Swiper
+              modules={[Navigation, Pagination]}
+              spaceBetween={10}
+              slidesPerView={1}
+              navigation
+              pagination={{ clickable: true }}
+              initialSlide={initialSlide}
+              className="w-full rounded-lg shadow-xl"
             >
-              ‹
-            </button>
-            <button
-              onClick={handleNext}
-              className="absolute right-[-3rem] top-1/2 -translate-y-1/2 text-white text-4xl"
-            >
-              ›
-            </button>
+              {preview.map((photo, i) => (
+                <SwiperSlide key={i}>
+                  <div className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[85vh] overflow-hidden">
+                    <Image
+                      src={photo}
+                      alt={`Preview photo ${i + 1}`}
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
       )}
