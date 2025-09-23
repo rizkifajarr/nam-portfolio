@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Keyboard } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
+import Lightbox from "yet-another-react-lightbox";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "yet-another-react-lightbox/styles.css";
 
 const organizations = [
   {
@@ -134,19 +139,6 @@ const OrganizationExperience = () => {
     setInitialSlide(0);
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClosePreview();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
   return (
     <section
       id="organization"
@@ -217,46 +209,15 @@ const OrganizationExperience = () => {
         ))}
       </div>
 
+      {/* Lightbox */}
       {preview && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 sm:p-4 pointer-events-auto"
-          data-aos="fade-zoom-in"
-          data-aos-duration="500"
-          data-aos-easing="ease-out-cubic"
-        >
-          <div className="relative w-full max-w-[90vw] sm:max-w-4xl lg:max-w-5xl overflow-visible">
-            <button
-              onClick={handleClosePreview}
-              className="absolute -top-10 right-0 text-white text-2xl sm:text-3xl bg-black/50 rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center hover:bg-black/70 transition-colors"
-            >
-              ✕
-            </button>
-
-            <Swiper
-              modules={[Navigation, Pagination, Keyboard]}
-              spaceBetween={10}
-              slidesPerView={1}
-              navigation
-              pagination={{ clickable: true }}
-              keyboard={{ enabled: true, onlyInViewport: false }}
-              initialSlide={initialSlide}
-              className="w-full rounded-lg shadow-xl"
-            >
-              {preview.map((photo, i) => (
-                <SwiperSlide key={i}>
-                  <div className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[85vh] overflow-hidden">
-                    <Image
-                      src={photo}
-                      alt={`Preview photo ${i + 1}`}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </div>
+        <Lightbox
+          open={!!preview}
+          close={handleClosePreview}
+          index={initialSlide}
+          slides={preview.map((src) => ({ src }))}
+          plugins={[Zoom, Fullscreen]}
+        />
       )}
     </section>
   );
