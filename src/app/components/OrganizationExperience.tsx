@@ -149,48 +149,46 @@ const OrganizationExperience = () => {
         Organizational Experience
       </h2>
 
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-12">
         {organizations.map((org, index) => (
           <div
             key={index}
-            className="bg-white/70 border border-pink-200 backdrop-blur-sm rounded-lg p-6 shadow-md hover:shadow-lg transition-all"
+            className={`flex flex-col lg:flex-row items-center gap-8 ${
+              index % 2 === 1 ? "lg:flex-row-reverse" : ""
+            }`}
             data-aos="fade-up"
             data-aos-delay={index * 100}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-              <div>
-                <h3 className="text-lg font-semibold text-rose-500">
-                  {org.title}
-                </h3>
-                <p className="text-sm text-gray-600 italic">
-                  {org.organization}
-                </p>
-              </div>
-              <span className="text-sm mt-2 sm:mt-0 text-gray-400 italic">
+            {/* Bagian teks */}
+            <div className="flex-1 space-y-3">
+              <h3 className="text-xl font-bold text-rose-500">{org.title}</h3>
+              <p className="text-sm text-gray-600 italic">{org.organization}</p>
+              <span className="block text-sm text-gray-400 italic">
                 {org.date}
               </span>
+
+              <ul className="list-disc list-inside text-sm text-gray-700 mt-2 space-y-1">
+                {org.tasks.map((task, i) => (
+                  <li key={i}>{task}</li>
+                ))}
+              </ul>
             </div>
 
-            <ul className="list-disc list-inside text-sm text-gray-700 mt-2 space-y-1">
-              {org.tasks.map((task, i) => (
-                <li key={i}>{task}</li>
-              ))}
-            </ul>
-
+            {/* Bagian foto */}
             {org.photos && org.photos.length > 0 && (
-              <div className="mt-4">
+              <div className="flex-1 w-full lg:w-1/2">
                 <Swiper
                   modules={[Navigation, Pagination]}
                   spaceBetween={10}
                   slidesPerView={1}
                   navigation
                   pagination={{ clickable: true }}
-                  className="rounded-lg shadow-md"
+                  className="rounded-lg shadow-lg"
                 >
                   {org.photos.map((photo, i) => (
                     <SwiperSlide key={i}>
                       <div
-                        className="relative w-full h-64 rounded-lg overflow-hidden cursor-pointer"
+                        className="relative w-full h-64 lg:h-80 rounded-lg overflow-hidden cursor-pointer"
                         onClick={() => handleOpenPreview(org.photos!, i)}
                       >
                         <Image
